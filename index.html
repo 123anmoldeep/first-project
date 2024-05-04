@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGRATION MASTERS</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>MIGRATION MASTERS</h1>
+    <div id="form-container">
+      <input type="text" id="name-input" placeholder="Enter student name" class="input-field">
+      <input type="number" id="listening-input" placeholder="Listening score" class="input-field">
+      <input type="number" id="speaking-input" placeholder="Speaking score" class="input-field">
+      <input type="number" id="reading-input" placeholder="Reading score" class="input-field">
+      
+      <button onclick="addStudent()" class="btn">Add Student</button>
+    </div>
+    <table id="students-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Listening Score</th>
+          <th>Speaking Score</th>
+          <th>Reading Score</th>
+          <th>Date of Submission</th>
+        </tr>
+      </thead>
+      <tbody id="students-body">
+        <!-- Student records will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
