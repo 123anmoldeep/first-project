@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGRATION MASTERS</title>
+  <style>
+    /* CSS styles */
+    :root {
+      --primary-color: #4CAF50; /* Green */
+      --primary-dark-color: #388E3C; /* Dark green */
+      --secondary-color: #03A9F4; /* Blue */
+      --secondary-dark-color: #0277BD; /* Dark blue */
+      --background-color: #f7f7f7; /* Light gray */
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .container:hover {
+      transform: translateY(-4px);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-dark-color);
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #form-container {
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      width: calc(100% - 10px);
+      margin-bottom: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #f7f7f7;
+    }
+
+    .input-field:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      color: var(--primary-dark-color);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      border-radius: 10px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MIGRATION MASTERS</h1>
+    <div id="form-container">
+      <input type="text" id="name-input" placeholder="Enter student name" class="input-field">
+      <input type="number" id="listening-input" placeholder="Listening score" class="input-field">
+      <input type="number" id="speaking-input" placeholder="Speaking score" class="input-field">
+      <input type="number" id="reading-input" placeholder="Reading score" class="input-field">
+      
+      <button onclick="addStudent()" class="btn">Add Student</button>
+    </div>
+    <table id="students-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Listening Score</th>
+          <th>Speaking Score</th>
+          <th>Reading Score</th>
+          <th>Date of Submission</th>
+        </tr>
+      </thead>
+      <tbody id="students-body">
+        <!-- Student records will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  fetchStudentsFromLocalStorage();
+});
+
+function fetchStudentsFromLocalStorage() {
+  const students = JSON.parse(localStorage.getItem('students')) || [];
+  students.forEach(student => {
+    addStudentRow(student);
+  });
+}
+
+function addStudent() {
+  const nameInput = document.getElementById('name-input');
+  const listeningInput = document.getElementById('listening-input');
+  const speakingInput = document.getElementById('speaking-input');
+  const readingInput = document.getElementById('reading-input');
+  const dateInput = document.getElementById('date-input');
+
+  const name = nameInput.value.trim();
+  const listeningScore = parseFloat(listeningInput.value);
+  const speakingScore = parseFloat(speakingInput.value);
+  const readingScore = parseFloat(readingInput.value);
+
+  if (name && !isNaN(listeningScore) && !isNaN(speakingScore) && !isNaN(readingScore)) {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
+    const student = {
+      "name": name,
+      "listening_score": listeningScore,
+      "speaking_score": speakingScore,
+      "reading_score": readingScore,
+      "submission_date": currentDate
+    };
+
+    addStudentRow(student);
+    saveStudentToLocalStorage(student);
+
+    // Clear input fields
+    nameInput.value = '';
+    listeningInput.value = '';
+    speakingInput.value = '';
+    readingInput.value = '';
+    dateInput.value = currentDate; // Set date input field to current date
+  } else {
+    alert('Please enter valid values for all fields.');
+  }
+}
+
+function addStudentRow(student) {
+  const studentsBody = document.getElementById('students-body');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${student.name}</td>
+    <td>${student.listening_score}</td>
+    <td>${student.speaking_score}</td>
+    <td>${student.reading_score}</td>
+    <td>${student.submission_date}</td>
+  `;
+  studentsBody.appendChild(row);
+}
+
+function saveStudentToLocalStorage(student) {
+  let students = JSON.parse(localStorage.getItem('students')) || [];
+  students.push(student);
+  localStorage.setItem('students', JSON.stringify(students));
+}
+
+  </script>
+</body>
+</html>
